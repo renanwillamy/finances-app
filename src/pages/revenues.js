@@ -1,0 +1,83 @@
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
+import '../App.css'
+import ReactTable from "react-table";
+import Button from "../components/button";
+import 'react-table/react-table.css'
+
+class Revenue extends Component {
+    constructor(props) {
+        super(props);
+        this.goToEditPage = this.goToEditPage.bind(this);
+    }
+
+    goToEditPage(value) {
+        console.log('Clicked', value)
+        this.props.history.push(`/revenues/${value}`)        
+    }
+
+    render() {
+        const data = [{
+            name: 'Aluguel',
+            revValue: 800.50,
+            sourceName: 'José Maria',
+            dueDate: '12/07/2017',
+            receivedDate: '11/07/2017',
+            information: 'Some information about the revenue',
+            id: 12
+        }]
+
+        const columns = [{
+            Header: 'Name',
+            accessor: 'name' // String-based value accessors!
+        },
+        {
+            Header: 'Value',
+            accessor: 'revValue', // String-based value accessors!
+            Cell: props => <span className='number'>{props.value}</span>
+        },
+        {
+            Header: 'Source Name',
+            accessor: 'sourceName'
+        },
+        {
+            Header: 'Due Date',
+            accessor: 'dueDate'
+        },
+        {
+            Header: 'Received Date',
+            accessor: 'receivedDate'
+        },
+        {
+            Header: 'Information',
+            accessor: 'information'
+        },
+        {
+            Header: 'Actions',
+            accessor: 'actions',
+            filterable: false,
+            Cell: row => (
+                <Button name={'Edit'}
+                    handleClick={() => this.goToEditPage(row.row._original.id)}
+                />
+            )
+        }
+        ]
+
+        return (
+            <div className={'container table'}>
+                <ReactTable
+                    data={data}
+                    columns={columns}
+                    defaultPageSize={10}
+                    filterable
+                    className="-striped -highlight"
+                />
+                <Button name={'Button Name'} />
+            </div>
+
+        );
+    }
+}
+
+export default Revenue;

@@ -1,0 +1,43 @@
+header {
+    background: rgb(61, 79, 245);
+    height: 80px;
+    width: 100%;
+    position: relative;
+}
+
+nav ul {
+    list-style: none;  
+}  
+
+.nav-container {
+    right:   10%;
+    top: 50%; 
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);   
+    position: absolute;
+}
+
+nav li {
+    display: inline;
+    margin: 0 9px;
+}
+
+nav li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.4em;
+}
+
+#box-title {
+    position: absolute;
+    left: 10%;
+    top:50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+#box-title h1{
+    color: #fff;
+}
