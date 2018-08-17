@@ -10,7 +10,7 @@ class Header extends Component {
             <header >
                 <nav className={'container center-div-vertical'}>
                     <div id='box-title'>
-                        <h1>Finances</h1>
+                        <h1><Link to="/">Finances</Link></h1>
                     </div>
                     <div className={'nav-container center-div-vertical'}>
                         <ul>

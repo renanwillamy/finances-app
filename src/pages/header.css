@@ -38,6 +38,11 @@ nav li a {
     transform: translateY(-50%);
 }
 
+#box-title a {
+    text-decoration: none;
+    color: #fff;
+}
+
 #box-title h1{
     color: #fff;
 }

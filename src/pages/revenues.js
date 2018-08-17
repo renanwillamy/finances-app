@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
-import '../App.css'
 import ReactTable from "react-table";
 import Button from "../components/button";
 import 'react-table/react-table.css'
+import './revenues.css';
 
 class Revenue extends Component {
     constructor(props) {
         super(props);
         this.goToEditPage = this.goToEditPage.bind(this);
+        this.goToNew = this.goToNew.bind(this);
     }
 
     goToEditPage(value) {
-        console.log('Clicked', value)
         this.props.history.push(`/revenues/${value}`)        
+    }
+
+    goToNew() {
+        this.props.history.push(`/revenues-new`)        
     }
 
     render() {
@@ -57,7 +60,7 @@ class Revenue extends Component {
             accessor: 'actions',
             filterable: false,
             Cell: row => (
-                <Button name={'Edit'}
+                <Button name={'Edit'} classNameButton={'button-blue'}
                     handleClick={() => this.goToEditPage(row.row._original.id)}
                 />
             )
@@ -73,7 +76,8 @@ class Revenue extends Component {
                     filterable
                     className="-striped -highlight"
                 />
-                <Button name={'Button Name'} />
+                <Button id={'button-add'} handleClick={this.goToNew}
+                 name={'New'} classNameButton={'button-blue'} />
             </div>
 
         );

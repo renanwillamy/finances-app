@@ -6,7 +6,7 @@ import Utils from '../Utils'
 
 import 'react-datepicker/dist/react-datepicker.css';
 
-class RevenueEdit extends Component {
+class RevenueAdd extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,10 +25,6 @@ class RevenueEdit extends Component {
         this.goBack = this.goBack.bind(this);
     }
 
-    componentDidMount() {
-        const { match } = this.props;
-        this.getRevenueById(match.params.id);      
-    }
 
     handleNameChange(event) {
         this.setState({ name: event.target.value });
@@ -111,7 +107,7 @@ class RevenueEdit extends Component {
                         />
                     </div>
                     <div className={'form-buttons'}>
-                        <Button name={'Edit'} classNameButton={'button-blue'} />   
+                        <Button name={'Create'} classNameButton={'button-blue'} />   
                         <Button name={'Back'} handleClick={this.goBack} classNameButton={'button-blue'} />                     
                     </div>
                     
@@ -121,4 +117,4 @@ class RevenueEdit extends Component {
     }
 }
 
-export default RevenueEdit;
+export default RevenueAdd;
