@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment'
 import Button from '../components/button'
 import Utils from '../Utils'
-
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from "axios";
 
 class RevenueEdit extends Component {
     constructor(props) {
         super(props);
         this.state = {
             name: '',
-            revValue: '',
+            amount: '',
             sourceName: '',
             dueDate: null,
             receivedDate: null,
@@ -26,18 +26,20 @@ class RevenueEdit extends Component {
     }
 
     componentDidMount() {
-        const { match } = this.props;
-        this.getRevenueById(match.params.id);      
+        const {match} = this.props;
+        this.getRevenueById(match.params.id);
     }
 
     handleNameChange(event) {
-        this.setState({ name: event.target.value });
+        this.setState({name: event.target.value});
     }
+
     handleValueChange(event) {
-        this.setState({ revValue: event.target.value });
+        this.setState({amount: event.target.value});
     }
+
     handleSourceChange(event) {
-        this.setState({ sourceName: event.target.value });
+        this.setState({sourceName: event.target.value});
     }
 
     handleDueDateChange(date) {
@@ -53,40 +55,50 @@ class RevenueEdit extends Component {
     }
 
     getRevenueById(id) {
-        if (id == 12) {
-            this.setState({
-                name: 'Renan',
-                revValue: '100.50',
-                sourceName: 'Farmácia',
-                dueDate: moment(Utils.convertToDate('20/08/2018')),
-                receivedDate: moment(Utils.convertToDate('30/08/2018'))
-            })
-        }
+        axios.get(Utils.URL_BASE + '/revenues/' + id)
+            .then(function (response) {
+               let rev = response.data.data;
+                return {
+                    id: rev.id,
+                    name: rev.name,
+                    amount: rev.amount,
+                    sourceName: '',
+                    dueDate: moment(parseInt(rev.dueDate)),
+                    receivedDate: moment(parseInt(rev.receivedDate)),
+                    information: rev.information
+                }
+
+            }).then((revenue) => {
+            this.setState(revenue)
+        })
+            .catch(function (error) {
+                console.log(error)
+            });
     }
 
-    goBack(){
+    goBack() {
         this.props.history.push('/revenues');
     }
 
     render() {
-        const { name, revValue, sourceName, dueDate, receivedDate } = this.state;
+        const {name, amount, sourceName, dueDate, receivedDate} = this.state;
         return (
             <div className={'container'}>
                 <form className={'form shadow'}>
                     <div>
                         <label htmlFor={'name'}>
                             Name:</label>
-                        <input type="text" name="name" value={name} onChange={this.handleNameChange} />
+                        <input type="text" name="name" value={name} onChange={this.handleNameChange}/>
                     </div>
                     <div>
                         <label htmlFor={'revenueValue'}>
                             Value:</label>
-                        <input type="text" name="revenueValue" value={revValue} onChange={this.handleValueChange} />
+                        <input type="text" name="revenueValue" value={amount} onChange={this.handleValueChange}/>
                     </div>
                     <div>
                         <label htmlFor={'revenueValue'}>
                             Source:</label>
-                        <input type="text" name="revenueValue" value={sourceName} onChange={this.handleSourceChange} />
+                        <input type="text" name="revenueValue" value={sourceName} onChange={this.handleSourceChange}/>
                     </div>
                     <div>
                         <label htmlFor={'dueDate'}>
@@ -111,10 +123,10 @@ class RevenueEdit extends Component {
                         />
                     </div>
                     <div className={'form-buttons'}>
-                        <Button name={'Edit'} classNameButton={'button-blue'} />   
-                        <Button name={'Back'} handleClick={this.goBack} classNameButton={'button-blue'} />                     
+                        <Button name={'Edit'} classNameButton={'button-blue'}/>
+                        <Button name={'Back'} handleClick={this.goBack} classNameButton={'button-blue'}/>
                     </div>
-                    
+
                 </form>
             </div>
         );

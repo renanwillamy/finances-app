@@ -3,6 +3,7 @@ import  { Component } from 'react';
 
 class Utils extends Component {
     static DATE_FORMAT = 'DD/MM/YYYY'
+    static URL_BASE = 'http://localhost/finances-backend/public'
 
     static convertToDate(date) {
         var array = date.split('/')

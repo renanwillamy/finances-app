@@ -52,7 +52,7 @@ class RevenueAdd extends Component {
         if (id == 12) {
             this.setState({
                 name: 'Renan',
-                revValue: '100.50',
+                amount: '100.50',
                 sourceName: 'Farmácia',
                 dueDate: moment(Utils.convertToDate('20/08/2018')),
                 receivedDate: moment(Utils.convertToDate('30/08/2018'))
@@ -65,7 +65,7 @@ class RevenueAdd extends Component {
     }
 
     render() {
-        const { name, revValue, sourceName, dueDate, receivedDate } = this.state;
+        const { name, amount, sourceName, dueDate, receivedDate } = this.state;
         return (
             <div className={'container'}>
                 <form className={'form shadow'}>
@@ -77,7 +77,7 @@ class RevenueAdd extends Component {
                     <div>
                         <label htmlFor={'revenueValue'}>
                             Value:</label>
-                        <input type="text" name="revenueValue" value={revValue} onChange={this.handleValueChange} />
+                        <input type="text" name="revenueValue" value={amount} onChange={this.handleValueChange} />
                     </div>
                     <div>
                         <label htmlFor={'revenueValue'}>
