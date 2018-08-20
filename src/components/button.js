@@ -9,7 +9,7 @@ class Button extends Component {
     render() {
         const { id, name, handleClick, classNameButton } = this.props
         return (
-                <button id={id} onClick={handleClick} className={classNameButton}>
+                <button type={'button'} id={id} onClick={handleClick} className={classNameButton}>
                     {name}
                 </button>
         );

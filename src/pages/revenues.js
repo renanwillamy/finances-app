@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import ReactTable from "react-table";
 import Button from "../components/button";
 import axios from "axios";
+import moment from 'moment'
 import 'react-table/react-table.css';
 import './revenues.css';
 import Utils from '../Utils';
@@ -41,8 +42,8 @@ class Revenue extends Component {
                         name: item.name,
                         amount: item.amount,
                         sourceName: '',
-                        dueDate: item.dueDate,
-                        receivedDate: item.receivedDate,
+                        dueDate: moment(parseInt(item.dueDate)).format('DD/MM/YYYY'),
+                        receivedDate: moment(parseInt(item.receivedDate)).format('DD/MM/YYYY'),
                         information: item.information
                     })
                 })
