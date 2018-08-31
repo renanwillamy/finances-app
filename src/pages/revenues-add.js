@@ -2,9 +2,12 @@ import React, {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import Button from '../components/button'
 import Utils from '../Utils'
+import validator from 'validator'
 import {withAlert} from 'react-alert'
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from "axios";
+import CustomInput from "../components/custom-input";
+import CustomDatePicker from "../components/custom-date-picker";
 
 class RevenueAdd extends Component {
     constructor(props) {
@@ -16,6 +19,10 @@ class RevenueAdd extends Component {
             dueDate: null,
             receivedDate: null,
             information: '',
+            errorName: '',
+            errorValue: '',
+            errorSource: '',
+            errorDueDate: ''
         }
         this.handleNameChange = this.handleNameChange.bind(this);
         this.handleValueChange = this.handleValueChange.bind(this);
@@ -33,7 +40,9 @@ class RevenueAdd extends Component {
     }
 
     handleValueChange(event) {
-        this.setState({amount: event.target.value});
+        if (validator.isFloat(event.target.value) || event.target.value === '') {
+            this.setState({amount: event.target.value});
+        }
     }
 
     handleSourceChange(event) {
@@ -56,8 +65,8 @@ class RevenueAdd extends Component {
         this.props.history.push('/revenues');
     }
 
-    showMessage(isSuccess){
-        if(isSuccess){
+    showMessage(isSuccess) {
+        if (isSuccess) {
             this.props.alert.success("Created")
             this.setState({
                 name: '',
@@ -67,80 +76,98 @@ class RevenueAdd extends Component {
                 receivedDate: null,
                 information: ''
             })
-        }else {
+        } else {
             this.props.alert.error("Error")
         }
+    }
+
+    validate() {
+        const {name, amount, dueDate, sourceName, receivedDate, information} = this.state
+        let validated = true;
+        if (name.length < 2) {
+            this.setState({errorName: 'The name must contain more then two characters'});
+            validated = false;
+        } else {
+            this.setState({errorName: ''});
+        }
+
+        if (amount.length === 0) {
+            this.setState({errorValue: 'The amount must be greater than 0'});
+            validated = false;
+        } else {
+            this.setState({errorValue: ''});
+        }
+
+        if (sourceName.length < 2) {
+            this.setState({errorSource: 'The source name must contain more then two characters'});
+            validated = false;
+        } else {
+            this.setState({errorSource: ''});
+        }
+
+        if (!dueDate) {
+            this.setState({errorDueDate: 'The due date is required'});
+            validated = false;
+        } else {
+            this.setState({errorDueDate: ''});
+        }
+
+        return validated;
     }
 
     createRevenue() {
         const {name, amount, dueDate, receivedDate, information} = this.state
 
-        axios.post(Utils.URL_BASE + '/revenue', {
-            name: name,
-            amount: amount,
-            sourceName: '',
-            dueDate: dueDate.valueOf(),
-            receivedDate: receivedDate.valueOf(),
-            information: information,
-        })
-            .then(function (response) {
-                if (response.data.data > 0) {
-                   return true
+        if (this.validate()) {
+            let date = receivedDate ? receivedDate.valueOf(): 0
+            axios.post(Utils.URL_BASE + '/revenue', {
+                name: name,
+                amount: amount,
+                sourceName: '',
+                dueDate: dueDate.valueOf(),
+                receivedDate: date,
+                information: information,
+            })
+                .then(function (response) {
+                    return response.data.data > 0;
 
-                } else {
-                    return false;
-                }
-
-            }).then((result)=>
+                }).then((result) =>
                 this.showMessage(result)
-        )
-            .catch(function (error) {
-                console.log(error)
-            });
+            )
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
+
     }
 
     render() {
-        const {name, amount, sourceName, dueDate, receivedDate} = this.state;
+        const {
+            name, amount, sourceName, dueDate, receivedDate, errorName, errorValue,
+            errorDueDate, errorSource
+        } = this.state;
         return (
             <div className={'container'}>
                 <form className={'form shadow'}>
-                    <div>
-                        <label htmlFor={'name'}>
-                            Name:</label>
-                        <input type="text" name="name" value={name} onChange={this.handleNameChange}/>
-                    </div>
-                    <div>
-                        <label htmlFor={'revenueValue'}>
-                            Value:</label>
-                        <input type="text" name="revenueValue" value={amount} onChange={this.handleValueChange}/>
-                    </div>
-                    <div>
-                        <label htmlFor={'revenueValue'}>
-                            Source:</label>
-                        <input type="text" name="revenueValue" value={sourceName} onChange={this.handleSourceChange}/>
-                    </div>
-                    <div>
-                        <label htmlFor={'dueDate'}>
-                            Due Date:</label>
-                        <DatePicker
-                            name={'dueDate'}
-                            selected={dueDate}
-                            onChange={this.handleDueDateChange}
-                            dateFormatCalendar={Utils.DATE_FORMAT}
-                            dateFormat={Utils.DATE_FORMAT}
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor={'receivedDate'}>
-                            Received Date:</label>
-                        <DatePicker
-                            name={'receivedDate'}
-                            selected={receivedDate}
-                            onChange={this.handleReceivedDateChange}
-                            dateFormatCalendar={Utils.DATE_FORMAT}
-                            dateFormat={Utils.DATE_FORMAT}
-                        />
-                    </div>
+                    <CustomInput label={'Name'} errorMessage={errorName} fieldName={'name'} inputValue={name}
+                                 onChangeFunction={this.handleNameChange}/>
+
+                    <CustomInput label={'Amount'} errorMessage={errorValue} fieldName={'revenueValue'}
+                                 inputValue={amount}
+                                 onChangeFunction={this.handleValueChange}/>
+
+                    <CustomInput label={'Source'} errorMessage={errorSource} fieldName={'source'}
+                                 inputValue={sourceName}
+                                 onChangeFunction={this.handleSourceChange}/>
+
+                    <CustomDatePicker label={'Due Date'} errorMessage={errorDueDate} fieldName={'dueDate'}
+                                      inputValue={dueDate}
+                                      onChangeFunction={this.handleDueDateChange}/>
+
+                    <CustomDatePicker label={'Received Date'} fieldName={'receivedDate'}
+                                      inputValue={receivedDate}
+                                      onChangeFunction={this.handleReceivedDateChange}/>
+
                     <div className={'form-buttons'}>
                         <Button name={'Create'} classNameButton={'button-blue'} handleClick={this.createRevenue}/>
                         <Button name={'Back'} handleClick={this.goBack} classNameButton={'button-blue'}/>

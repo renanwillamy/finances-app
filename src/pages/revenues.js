@@ -1,16 +1,16 @@
-import React, {Component} from 'react';
-import ReactTable from "react-table";
-import Button from "../components/button";
-import axios from "axios";
+import React, {Component} from 'react'
+import ReactTable from "react-table"
+import Button from "../components/button"
+import axios from "axios"
 import moment from 'moment'
-import 'react-table/react-table.css';
-import './revenues.css';
-import Utils from '../Utils';
-import ModalConfirm from "../components/modal-confirm";
+import 'react-table/react-table.css'
+import './revenues.css'
+import Utils from '../Utils'
+import ModalConfirm from "../components/modal-confirm"
 
 class Revenue extends Component {
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             revenues: [],
             revenueId: 0,
@@ -43,11 +43,12 @@ class Revenue extends Component {
                         amount: item.amount,
                         sourceName: '',
                         dueDate: moment(parseInt(item.dueDate)).format('DD/MM/YYYY'),
-                        receivedDate: moment(parseInt(item.receivedDate)).format('DD/MM/YYYY'),
+                        receivedDate: item.receivedDate > 0 ? moment(parseInt(item.receivedDate))
+                            .format('DD/MM/YYYY'):'',
                         information: item.information
                     })
                 })
-                return list;
+                return list
             }).then((list) => {
             this.setState({
                 revenues: list
@@ -55,7 +56,7 @@ class Revenue extends Component {
         })
             .catch(function (error) {
                 console.log(error)
-            });
+            })
     }
 
     goToNew() {
@@ -124,7 +125,7 @@ class Revenue extends Component {
                 />:null}
             </div>
 
-        );
+        )
     }
 
     confirmModalClick(){
@@ -137,7 +138,7 @@ class Revenue extends Component {
             .then(()=>this.closeConfirmModal())
             .catch(function (error) {
                 console.log(error)
-            });
+            })
     }
 
     openConfirmModal(id) {
@@ -153,4 +154,4 @@ class Revenue extends Component {
     }
 }
 
-export default Revenue;
+export default Revenue
